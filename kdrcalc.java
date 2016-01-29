@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////
-//J0KE.exe Stat Calculator v1.0
+//J0KE.exe Stat Calculator v1.2
 //By: Alek "binarycoder" Bollig - 1/27/2015
 //Retrieves data from the Planetside 2 API, and calculates
 //               Kill/Death Ratio and Head Shot percentage 
@@ -183,13 +183,29 @@ public class kdrcalc {
 				id == 7400 ||
 				id == 7403 ||
 				id == 7404 ||
-				id == 25007 ||
-				id == 24007 ||
-				id == 7365 ||
-				id == 7358 ||
-				id == 26007 ||
-				id == 7372 ||
-				id == 2311)) {
+				id == 87 ||
+				id == 88 ||
+				id == 89 ||
+				id == 1974 ||
+				id == 1979 ||
+				id == 7301 ||
+				id == 7316 ||
+				id == 07337 ||
+				id == 024000 ||
+				id == 024001 ||
+				id == 024002 ||
+				id == 024003 ||
+				id == 024004 ||
+				id == 025000 ||
+				id == 025001 ||
+				id == 025002 ||
+				id == 025003 ||
+				id == 025004 ||
+				id == 026000 ||
+				id == 026001 ||
+				id == 026002 ||
+				id == 026003 ||
+				id == 026004)) {
 			return true;
 		} else {
 			return false;
@@ -197,7 +213,7 @@ public class kdrcalc {
 		
 	}
 	public static void main(String[] args) throws IOException {
-		System.out.println("--J0KE.exe v1.1--");
+		System.out.println("--J0KE.exe v1.2--");
 		System.out.println("_________________");
 		System.out.println();
 		Scanner kb = new Scanner(System.in);
