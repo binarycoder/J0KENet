@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////
-//J0KENet Stat Calculator v1.0
+//J0KE.exe Stat Calculator v1.0
 //By: Alek "binarycoder" Bollig - 1/27/2015
 //Retrieves data from the Planetside 2 API, and calculates
 //               Kill/Death Ratio and Head Shot percentage 
@@ -182,7 +182,14 @@ public class kdrcalc {
 				id == 7392 ||
 				id == 7400 ||
 				id == 7403 ||
-				id == 7404)) {
+				id == 7404 ||
+				id == 25007 ||
+				id == 24007 ||
+				id == 7365 ||
+				id == 7358 ||
+				id == 26007 ||
+				id == 7372 ||
+				id == 2311)) {
 			return true;
 		} else {
 			return false;
@@ -190,8 +197,8 @@ public class kdrcalc {
 		
 	}
 	public static void main(String[] args) throws IOException {
-		System.out.println("--J0KENet Stat Calculator v1.0--");
-		System.out.println("________________________________");
+		System.out.println("--J0KE.exe v1.1--");
+		System.out.println("_________________");
 		System.out.println();
 		Scanner kb = new Scanner(System.in);
 		String playerName;
@@ -257,7 +264,7 @@ public class kdrcalc {
 			System.out.println("Kills: " + killCountKD + " Deaths: " + deathCountKD);
 			System.out.println();
 			System.out.println("-----------------");
-			System.out.printf("HSR: %.3f%n", (double) headshotCount / (double) killCount);
+			System.out.printf("HSR: %.2f%%%n", ((double) headshotCount / (double) killCount) * 100);
 			System.out.printf("True KD: %.3f%n", (double) killCountKD / (double) deathCountKD);
 			System.out.println("-----------------");
 			System.out.println();
