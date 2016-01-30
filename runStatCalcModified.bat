@@ -1,1 +1,1 @@
-java -jar J0KENetStatCalc.jar "killfilter" "deathfilter"
+java -jar J0KENetStatCalc.jar "bolter" "deathfilter"

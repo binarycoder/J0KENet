@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////
-//J0KE.exe Stat Calculator v1.2
+//J0KE.exe Stat Calculator v1.3
 //By: Alek "binarycoder" Bollig - 1/27/2015
 //Retrieves data from the Planetside 2 API, and calculates
 //               Kill/Death Ratio and Head Shot percentage 
@@ -53,16 +53,16 @@ public class kdrcalc {
 		String playerName, killFilter = "killfilter", deathFilter = "deathfilter";
 		
 		if (args.length >= 1) {
-			killFilter = "files\\" + args[0];
+			killFilter = args[0];
 			System.out.println("Custom kill filter \"" + args[0] + "\" loaded.");
 			if (args.length == 2) {
-				deathFilter = "files\\" + args[0];
+				deathFilter = args[1];
 				System.out.println("Custom death filter \"" + args[1] + "\" loaded.");
 			}
 		}
 		
-		ArrayList<Integer> killBanList = loadBanList("files\\" + "killFilter" + ".txt");
-		ArrayList<Integer> deathBanList = loadBanList("files\\" + "killFilter" + ".txt");
+		ArrayList<Integer> killBanList = loadBanList(("files\\" + killFilter + ".txt"));
+		ArrayList<Integer> deathBanList = loadBanList("files\\" + deathFilter + ".txt");
 		
 		System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
 		playerName = kb.next().toLowerCase();
