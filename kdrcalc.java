@@ -1,141 +1,213 @@
 ///////////////////////////////////////////////////////////
-//J0KE.exe Stat Calculator v1.3
-//By: Alek "binarycoder" Bollig - 1/27/2015
+//J0KE.exe Stat Calculator v1.4
+//By: Alek "binarycoder" Bollig - 2/1/2015
 //Retrieves data from the Planetside 2 API, and calculates
 //               Kill/Death Ratio and Head Shot percentage 
 ///////////////////////////////////////////////////////////
 
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.io.*;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class kdrcalc {
-	
-	public static ArrayList<Integer> loadBanList(String filename) {
-		ArrayList<Integer> output = new ArrayList<Integer>();
-		File fileLocation = new File(filename);
-		try {
-			Scanner file = new Scanner(fileLocation);
-			while (file.hasNextLine()) {
-				output.add(Integer.parseInt(file.nextLine()));
-			}
-			file.close();
-			return output;
-		} catch (FileNotFoundException e) {
-			System.out.println("null");
-			return null;
-		}
-	}
-	public static String censusFetch(String link) throws IOException {
-		URL url = new URL(link);
-		URLConnection connection = url.openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String output;
-		output = in.readLine();
-		in.close();
-		return output;
-	}
-	public static boolean antiCheese(int id, ArrayList<Integer> list) {
-		for (int i = 0; i < list.size(); i++) {
-			if (id == list.get(i)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	public static void main(String[] args) throws IOException {
-		System.out.println("--J0KE.exe v1.3--");
-		System.out.println("_________________");
-		System.out.println();
-		Scanner kb = new Scanner(System.in);
-		String playerName, killFilter = "killfilter", deathFilter = "deathfilter";
-		
-		if (args.length >= 1) {
-			killFilter = args[0];
-			System.out.println("Custom kill filter \"" + args[0] + "\" loaded.");
-			if (args.length == 2) {
-				deathFilter = args[1];
-				System.out.println("Custom death filter \"" + args[1] + "\" loaded.");
-			}
-		}
-		
-		ArrayList<Integer> killBanList = loadBanList(("files\\" + killFilter + ".txt"));
-		ArrayList<Integer> deathBanList = loadBanList("files\\" + deathFilter + ".txt");
-		
-		System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
-		playerName = kb.next().toLowerCase();
-		while (!playerName.equals("exit")) {
-			String playerId = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?name.first_lower=" + playerName);
-			while (playerId.equals("{\"character_list\":[],\"returned\":0}")) {
-				System.out.println("Error: No character data. Check spelling twice, try again, then yell at binary.");
-				System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
-				playerName = kb.next().toLowerCase();
-				if (playerName.equals("exit")) {
-					kb.close();
-					System.out.println("Program Terminated.");
-					return;
-				} else {
-					playerId = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?name.first_lower=" + playerName);
-				}
-				
-			}
-			playerId = playerId.substring(playerId.indexOf("character_id") + 15, playerId.indexOf("name") - 3);
-			String killFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
-											+ playerId + "&type=KILL&c:limit=1000").substring(25);
-			String deathFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
-											+ playerId + "&type=KILL,DEATH&c:limit=1000").substring(25);
-			
-			JSONArray data = new JSONArray(killFeed);
-			int killCount = 0, headshotCount = 0;
-			for (int i = 0; i < data.length(); i++) {
-				String kill = data.get(i).toString();
-				int vehicleValue = Integer.parseInt(kill.substring(kill.indexOf("attacker_vehicle_id")+ 22, kill.indexOf("is_critical", (kill.indexOf("attacker_vehicle_id"))) - 3));
-				if  (vehicleValue == 0) { //remove vehicle kills
-					int weaponValue = Integer.parseInt(kill.substring(kill.indexOf("attacker_weapon_id") + 21, kill.indexOf("character_id", (kill.indexOf("attacker_weapon_id"))) - 3));
-					if (antiCheese(weaponValue, killBanList)) { //remove non IVI
-						killCount++;
-						int headshotValue = Integer.parseInt(kill.substring(kill.indexOf("\"is_headshot\":\"") + 15, kill.indexOf("\",\"character_loadout_id\"")));
-						if (headshotValue == 1) { //Mark Headshots
-							headshotCount++;
-						}
-					}
-				}
-			}
-			
-			JSONArray deathData = new JSONArray(deathFeed);
-			int killCountKD = 0, deathCountKD = 0;
-			for (int i = 0; i < deathData.length(); i++) {
-				String event = deathData.get(i).toString();
-				if (event.contains("deaths")) {
-					int weaponValue = Integer.parseInt(event.substring(event.indexOf("attacker_weapon_id") + 21, event.indexOf("character_id", (event.indexOf("attacker_weapon_id"))) - 3));
-					if (antiCheese(weaponValue,deathBanList)) {
-						deathCountKD++;
-					}
-				}
-				else if (event.contains("kills")) {
-					int vehicleValue = Integer.parseInt(event.substring(event.indexOf("attacker_vehicle_id")+ 22, event.indexOf("is_critical", (event.indexOf("attacker_vehicle_id"))) - 3));
-					if  (vehicleValue == 0) { //remove vehicle kills
-						int weaponValue = Integer.parseInt(event.substring(event.indexOf("attacker_weapon_id") + 21, event.indexOf("character_id", (event.indexOf("attacker_weapon_id"))) - 3));
-						if (antiCheese(weaponValue, killBanList)) { //remove non IVI
-							killCountKD++;
-							}
-						}
-					}
-				}
-			System.out.println("Viable Kills (past 1000 kills): " + killCount + " | Headshot kills: " + headshotCount);
-			System.out.println("Kills: " + killCountKD + " | Deaths: " + deathCountKD);
-			System.out.println();
-			System.out.println("-----------------");
-			System.out.printf("HSR: %.2f%%%n", ((double) headshotCount / (double) killCount) * 100);
-			System.out.printf("True KD: %.3f%n", (double) killCountKD / (double) deathCountKD);
-			System.out.println("-----------------");
-			System.out.println();
-			System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
-			playerName = kb.next().toLowerCase();
-		}
-		kb.close();
-		System.out.println("Program Terminated.");
-	}
+     private static final int SAMPLESIZE = 1000;
+     public static ArrayList<Integer> loadBanList(String filename) {
+          ArrayList<Integer> output = new ArrayList<Integer>();
+          File fileLocation = new File(filename);
+          try {
+               Scanner file = new Scanner(fileLocation);
+               while (file.hasNextLine()) {
+                    output.add(Integer.parseInt(file.nextLine()));
+               }
+               file.close();
+               return output;
+          } catch (FileNotFoundException e) {
+               System.out.println("null");
+               return null;
+          }
+     }
+     public static String censusFetch(String link) throws IOException {
+          URL url = new URL(link);
+          URLConnection connection = url.openConnection();
+          BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+          String output;
+          output = in.readLine();
+          in.close();
+          return output;
+     }
+     public static boolean antiCheese(int id, ArrayList<Integer> list) {
+          for (int i = 0; i < list.size(); i++) {
+               if (id == list.get(i)) {
+                    return false;
+               }
+          }
+          return true;
+     }
+     public static void main(String[] args) throws IOException {
+          System.out.println("--J0KE.exe v1.4--");
+          System.out.println("_________________");
+          System.out.println();
+          Scanner kb = new Scanner(System.in);
+          String playerName, killFilter = "killfilter", deathFilter = "deathfilter";
+          
+          if (args.length >= 1) {
+               killFilter = args[0];
+               System.out.println("Custom kill filter \"" + args[0] + "\" loaded.");
+               if (args.length == 2) {
+                    deathFilter = args[1];
+                    System.out.println("Custom death filter \"" + args[1] + "\" loaded.");
+               }
+          }
+          
+          ArrayList<Integer> killBanList = loadBanList(("files\\" + killFilter + ".txt"));
+          ArrayList<Integer> deathBanList = loadBanList("files\\" + deathFilter + ".txt");
+          
+          System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
+          playerName = kb.next().toLowerCase();
+          while (!playerName.equals("exit")) {
+               String playerId = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?name.first_lower=" + playerName);
+               System.out.print(". ");
+               while (playerId.equals("{\"character_list\":[],\"returned\":0}")) {
+                    System.out.println("Error: No character data. Check spelling twice, try again, then yell at binary.");
+                    System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
+                    playerName = kb.next().toLowerCase();
+                    if (playerName.equals("exit")) {
+                         kb.close();
+                         System.out.println("Program Terminated.");
+                         return;
+                    } else {
+                         playerId = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?name.first_lower=" + playerName);
+                    }
+                    
+               }
+               
+               String playerBR = playerId;
+               playerId = new JSONObject(playerId).getJSONArray("character_list").getJSONObject(0).getString("character_id");
+               int battleRank = new JSONObject(playerBR).getJSONArray("character_list").getJSONObject(0).getJSONObject("battle_rank").getInt("value");
+               String killFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
+                                                       + playerId + "&type=KILL&c:limit=" + SAMPLESIZE);
+               System.out.print(". ");
+               String deathFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
+                                                       + playerId + "&type=KILL,DEATH&c:limit=" + SAMPLESIZE);
+               System.out.print(". ");
+               String fakeKDString = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?character_id="
+                                                       + playerId + "&c:resolve=stat_history");
+               System.out.print(". ");
+          
+               JSONArray data = new JSONObject(killFeed).getJSONArray("characters_event_list");
+               int killCount = 0, headshotCount = 0;
+               ArrayList<Integer> iviWeapons = new ArrayList<Integer>();
+               ArrayList<Integer> iviWeaponsCount = new ArrayList<Integer>();
+               
+               
+               for (int i = 0; i < data.length(); i++) {
+                    int vehicleValue = data.getJSONObject(i).getInt("attacker_vehicle_id");
+                    if  (vehicleValue == 0) { //remove vehicle kills
+                         int weaponValue = data.getJSONObject(i).getInt("attacker_weapon_id");
+                         if (antiCheese(weaponValue, killBanList)) { //remove non IVI
+                              killCount++;
+                              if (!iviWeapons.contains(weaponValue)) {
+                                   iviWeapons.add(weaponValue);
+                                   iviWeaponsCount.add(1);
+                              } else {
+                                   iviWeaponsCount.set(iviWeapons.indexOf(weaponValue),iviWeaponsCount.get(iviWeapons.indexOf(weaponValue)) + 1);
+                              }
+                              int headshotValue = data.getJSONObject(i).getInt("is_headshot");
+                              if (headshotValue == 1) { //Mark Headshots
+                                   headshotCount++;
+                              }
+                         }
+                    }
+               }
+               //Sort array 
+               for (int i = 1; i < iviWeaponsCount.size(); i++) {
+                    int temp = iviWeaponsCount.get(i);
+                    int tempId = iviWeapons.get(i);
+                    int j;
+                    for (j = i - 1; j >= 0 && temp < iviWeaponsCount.get(j); j--) {
+                         iviWeaponsCount.set(j+1, iviWeaponsCount.get(j));
+                         iviWeapons.set(j+1, iviWeapons.get(j));
+                    }
+                    iviWeaponsCount.set(j+1, temp);
+                    iviWeapons.set(j+1, tempId);
+               }
+               //gather top 2-3 weapons w / > 100 kills.
+               while ((iviWeaponsCount.size()>3 || iviWeaponsCount.get(0) <= (SAMPLESIZE / 10)) && iviWeaponsCount.size() > 1) {
+                    iviWeaponsCount.remove(0);
+                    iviWeapons.remove(0);
+               }
+
+               String weaponNames = " - ";
+               double accuracy = 0;
+               for (int i = 0; i < iviWeapons.size(); i++) {
+                    String weaponData = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_weapon_stat?character_id="
+                                        + playerId + "&item_id=" + iviWeapons.get(i) + "&c:resolve=item&c:limit=50&c:sort=value:-1");
+                    System.out.print(". ");
+                    JSONArray weaponDataArray = new JSONObject(weaponData).getJSONArray("characters_weapon_stat_list");
+                    
+                    weaponNames += weaponDataArray.getJSONObject(0).getJSONObject("item").getJSONObject("name").getString("en") + " - ";
+                    double fire = weaponDataArray.getJSONObject(2).getDouble("value");
+                    double hit = weaponDataArray.getJSONObject(3).getDouble("value");
+                    accuracy += hit / fire;
+               }
+               accuracy /= iviWeapons.size();
+               
+               JSONArray deathData = new JSONObject(deathFeed).getJSONArray("characters_event_list");
+               int killCountKD = 0, deathCountKD = 0;
+               for (int i = 0; i < deathData.length(); i++) {
+                    String event = deathData.getJSONObject(i).getString("table_type");
+                    if (event.equals("deaths")) {
+                         int weaponValue = deathData.getJSONObject(i).getInt("attacker_weapon_id");
+                         if (antiCheese(weaponValue,deathBanList)) {
+                              deathCountKD++;
+                         }
+                    }
+                    else if (event.equals("kills")) {
+                         int vehicleValue = deathData.getJSONObject(i).getInt("attacker_vehicle_id");
+                         if  (vehicleValue == 0) { //remove vehicle kills
+                              int weaponValue = deathData.getJSONObject(i).getInt("attacker_weapon_id");
+                              if (antiCheese(weaponValue, killBanList)) { //remove non IVI
+                                   killCountKD++;
+                                   }
+                              }
+                         }
+                    }
+               
+               JSONArray reviveKDArray = new JSONObject(fakeKDString).getJSONArray("character_list").getJSONObject(0).getJSONObject("stats").getJSONArray("stat_history");
+               int kdIncrement = 0, fakeK = 0, fakeD = 0, week = 1; 
+               while (kdIncrement < SAMPLESIZE && week <= 9) {
+                    fakeD += reviveKDArray.getJSONObject(2).getJSONObject("week").getInt("w0" + week);
+                    fakeK += reviveKDArray.getJSONObject(5).getJSONObject("week").getInt("w0" + week);
+                    week++;
+                    kdIncrement += (fakeK + fakeD);
+               }
+               System.out.println();
+               if (kdIncrement < SAMPLESIZE) {
+                    System.out.println("!Results lower than Sample Size! Affects Fake KD, probably Accuracy and weapon selection as well.");
+               }
+               
+               System.out.println("Viable Kills (past " + SAMPLESIZE + " kills): " + killCount + " | Headshot kills: " + headshotCount);
+               System.out.println("Kills: " + killCountKD + " | Deaths: " + deathCountKD);
+               System.out.println("IVI Calculated from the following weapon(s): " + weaponNames);
+               System.out.println();
+               System.out.println("-----------------");
+               System.out.printf("BR: %d%n", battleRank);
+               System.out.printf("Revive K/D: %.3f%n", (double) fakeK / (double) fakeD);
+               System.out.printf("True KD: %.3f%n", (double) killCountKD / (double) deathCountKD);
+               System.out.printf("Accuracy: %.2f%%%n", accuracy * 100);
+               System.out.printf("HSR: %.2f%%%n", ((double) headshotCount / (double) killCount) * 100);
+               System.out.printf("IVI: %.2f%n", accuracy * (double) ((double) headshotCount / (double) killCount) * 10000);
+               System.out.println("-----------------");
+               System.out.println();
+               System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
+               playerName = kb.next().toLowerCase();
+          }
+          kb.close();
+          System.out.println("Program Terminated.");
+     }
 }
