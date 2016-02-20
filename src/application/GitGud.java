@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.scene.control.ProgressBar;
+import javafx.concurrent.Task;
 
 public class GitGud {
   public static ArrayList<Integer> loadBanList(String searchValue, String filename) {
@@ -87,6 +88,9 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
         .getJSONObject(0).getJSONObject("battle_rank").getInt("value");
     String killFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
                                             + playerId + "&type=KILL&c:limit=" + SAMPLESIZE);
+    if (killFeed.equals("{\"characters_event_list\":[],\"returned\":0}")) {
+      return null;
+    }
     final String deathFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
                                            + playerId + "&type=KILL,DEATH&c:limit=" + SAMPLESIZE);
     final String fakeKdString = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?character_id="
@@ -100,7 +104,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
   
     for (int i = 0; i < data.length(); i++) {
       int vehicleValue = data.getJSONObject(i).getInt("attacker_vehicle_id");
-      if  (vehicleValue == 0 || allowVehicles == 0) { //remove vehicle kills
+      if  (vehicleValue == 0 || allowVehicles == 1) { //remove vehicle kills
         int weaponValue = data.getJSONObject(i).getInt("attacker_weapon_id");
         if (antiCheese(weaponValue, killBanList)) { //remove non IVI
           killCount++;
@@ -132,11 +136,16 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
       iviWeapons.set(sortValue + 1, tempId);
     }
     //gather top 2-3 weapons w / > 100 kills.
-    while ((iviWeaponsCount.size() > 3 || iviWeaponsCount.get(0) <= (SAMPLESIZE / 10))
+    if (iviWeaponsCount.size() != 0) {
+      while ((iviWeaponsCount.size() > 3 || iviWeaponsCount.get(0) <= (SAMPLESIZE / 10))
         && iviWeaponsCount.size() > 1) {
       iviWeaponsCount.remove(0);
       iviWeapons.remove(0);
+      }
+    } else {
+      return null;
     }
+    
     ArrayList<String> weaponNames = new ArrayList<String>();
     double accuracy = 0;
     for (int i = 0; i < iviWeapons.size(); i++) {
@@ -146,7 +155,10 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
           + "&c:resolve=item&c:limit=50&c:sort=value:-1");
       JSONArray weaponDataArray = new JSONObject(weaponData)
           .getJSONArray("characters_weapon_stat_list");
-         
+      int weaponDataSize = new JSONObject(weaponData).getInt("returned");
+      if (weaponDataSize != 5) {
+        return null;
+      }
       weaponNames.add(weaponDataArray.getJSONObject(0)
           .getJSONObject("item").getJSONObject("name").getString("en"));
       double fire = weaponDataArray.getJSONObject(2).getDouble("value");
@@ -181,17 +193,23 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
         }
       }
     }
+    if (deathCountKd == 0) {
+      deathCountKd = 1;
+    }
     JSONArray reviveKdArray = new JSONObject(fakeKdString).getJSONArray("character_list")
         .getJSONObject(0).getJSONObject("stats").getJSONArray("stat_history");
     int kdIncrement = 0;
     int fakeK = 0;
-    int fakeD = 0;
+    int fakeD = 1;
     int week = 1; 
     while (kdIncrement < SAMPLESIZE && week <= 9) {
       fakeD += reviveKdArray.getJSONObject(2).getJSONObject("week").getInt("w0" + week);
       fakeK += reviveKdArray.getJSONObject(5).getJSONObject("week").getInt("w0" + week);
       week++;
       kdIncrement += (fakeK + fakeD);
+    }
+    if (fakeD == 0) {
+      fakeD = 1;
     }
     detailedOut += "Revive Kills: " + fakeK + "\n";
     detailedOut += "Revive Deaths: " + fakeD + "\n";

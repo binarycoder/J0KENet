@@ -7,40 +7,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="651.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXMLController">
+<SplitPane dividerPositions="0.5398373983739837" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXMLController">
    <items>
       <SplitPane dividerPositions="0.3189522342064715" prefHeight="160.0" prefWidth="200.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="668.0" prefWidth="274.0">
                <children>
-                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.0--" />
-                  <TextField fx:id="NameEnterField" layoutX="19.0" layoutY="61.0" onAction="#EnterPlayerName" promptText="Enter Name" text="Test" />
+                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.0 Release Client--" />
+                  <TextField fx:id="NameEnterField" layoutX="19.0" layoutY="61.0" onAction="#EnterPlayerName" onKeyPressed="#CalculateButtonEnter" promptText="Enter Name" />
                   <Text layoutX="19.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Player Name or Outfit">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Text>
-                  <RadioButton layoutX="19.0" layoutY="93.0" mnemonicParsing="false" selected="true" text="Player">
+                  <RadioButton fx:id="FXQueryPlayer" layoutX="19.0" layoutY="93.0" mnemonicParsing="false" selected="true" text="Player">
                      <toggleGroup>
                         <ToggleGroup fx:id="queryType" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton layoutX="113.0" layoutY="93.0" mnemonicParsing="false" text="Outfit" toggleGroup="$queryType" />
+                  <RadioButton fx:id="FXQueryOutfit" layoutX="113.0" layoutY="93.0" mnemonicParsing="false" text="Outfit" toggleGroup="$queryType" />
                   <Separator layoutX="2.0" layoutY="22.0" prefWidth="200.0" />
                   <Separator layoutX="2.0" layoutY="187.0" prefWidth="200.0" />
                   <Text layoutX="20.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter Settings">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Text>
-                  <Button layoutX="31.0" layoutY="559.0" mnemonicParsing="false" onAction="#CalculateButton" text="GIT GUD">
+                  <Button fx:id="gitGudButton" layoutX="31.0" layoutY="559.0" mnemonicParsing="false" onAction="#CalculateButton" text="GIT GUD">
                      <font>
                         <Font size="29.0" />
                      </font>
                   </Button>
                   <Separator layoutX="4.0" layoutY="544.0" prefWidth="200.0" />
-                  <TextField fx:id="SampleEnterField" layoutX="19.0" layoutY="145.0" promptText="Sample Size" text="1000" />
                   <Text layoutX="20.0" layoutY="133.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sample Size" />
                   <Button layoutX="139.0" layoutY="243.0" mnemonicParsing="false" onAction="#FXFilterLoad" text="Update" />
-                  <TextField fx:id="FXFilterName" layoutX="20.0" layoutY="243.0" prefHeight="25.0" prefWidth="115.0" />
+                  <TextField fx:id="FXFilterName" layoutX="20.0" layoutY="243.0" onKeyPressed="#filterPressEnter" prefHeight="25.0" prefWidth="115.0" />
                   <Text layoutX="20.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter New Filter:" />
                   <Text fx:id="FXLoadedFilter" layoutX="19.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Currently loaded: &quot;default&quot;" />
                   <Separator layoutX="2.0" layoutY="305.0" prefWidth="200.0" />
@@ -69,6 +68,8 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Text>
+                  <ProgressBar fx:id="progressBarParse" layoutX="7.0" layoutY="636.0" prefWidth="200.0" progress="0.0" />
+                  <TextField fx:id="SampleEnterField" layoutX="19.0" layoutY="147.0" promptText="Sample Size" text="1000" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -212,6 +213,58 @@
                </children>
             </AnchorPane>
         </items>
+      </SplitPane>
+      <SplitPane prefHeight="668.0" prefWidth="374.0">
+         <items>
+            <SplitPane dividerPositions="0.12574850299401197" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="74.0" prefWidth="563.0">
+                     <children>
+                        <Text layoutX="14.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="History/Outfit Stats List">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Text>
+                        <Separator layoutX="3.0" layoutY="52.0" prefHeight="16.0" prefWidth="557.0" />
+                        <Text layoutX="3.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+                        <Text layoutX="135.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BR" />
+                        <Text layoutX="198.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RKD" />
+                        <Text layoutX="250.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TKD" />
+                        <Text layoutX="307.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Acc" />
+                        <Text layoutX="368.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HSR" />
+                        <Text layoutX="444.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IVI" />
+                        <Text layoutX="499.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comp" />
+                        <Button layoutX="423.0" layoutY="12.0" mnemonicParsing="false" onAction="#exportCSV" text="Export as CSV (Soon)" />
+                        <Button fx:id="FXClear" layoutX="358.0" layoutY="12.0" mnemonicParsing="false" onAction="#clearHistory" text="Clear" />
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="581.0" prefWidth="563.0">
+                           <children>
+                              <ScrollPane layoutY="2.0" prefHeight="581.0" prefWidth="563.0">
+                                <content>
+                                  <AnchorPane fx:id="historyGridBack" minHeight="0.0" minWidth="0.0" prefHeight="20.0" prefWidth="544.0">
+                                       <children>
+                                          <Text fx:id="HistoryString" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringBR" layoutX="131.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringRKD" layoutX="195.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringTKD" layoutX="249.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringAcc" layoutX="302.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringHSR" layoutX="366.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringIVI" layoutX="438.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          <Text fx:id="HistoryStringCOMP" layoutX="497.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </items>
       </SplitPane>
    </items>
 </SplitPane>
