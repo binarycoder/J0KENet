@@ -3,6 +3,8 @@ Planetside 2 Statistics Calculator
 
 To use: Download zip file, run "Joke_gg.jar."
 
+Outfit warning! This takes forever. Only use sparingly, and preferably on smaller outfits. 
+
 Algorithm Explanation:
 
  * BR: Just pulled from the character stats. 
