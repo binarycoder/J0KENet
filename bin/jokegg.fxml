@@ -13,7 +13,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="668.0" prefWidth="274.0">
                <children>
-                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.0 Release Client--" />
+                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.0--" />
                   <TextField fx:id="NameEnterField" layoutX="19.0" layoutY="61.0" onAction="#EnterPlayerName" onKeyPressed="#CalculateButtonEnter" promptText="Enter Name" />
                   <Text layoutX="19.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Player Name or Outfit">
                      <font>
@@ -76,74 +76,64 @@
                <children>
                   <SplitPane dividerPositions="0.3303303303303303" layoutX="49.0" layoutY="176.0" orientation="VERTICAL" prefHeight="668.0" prefWidth="664.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="93.0" prefWidth="658.0" style="-fx-background-color: #33cccc;">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="93.0" prefWidth="658.0" style="-fx-background-color: #00b3b3;">
                            <children>
-                              <Text fill="WHITE" layoutX="35.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BR">
+                              <Text fill="WHITE" layoutX="81.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BR">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="103.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Revive K/D">
+                              <Text fill="WHITE" layoutX="164.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Revive K/D">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="226.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="True K/D">
+                              <Text fill="WHITE" layoutX="306.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="True K/D">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="331.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Accuracy">
+                              <Text fill="WHITE" layoutX="51.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Accuracy">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="83.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HSR">
+                              <Text fill="WHITE" layoutX="199.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HSR">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="177.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IVI Score">
+                              <Text fill="WHITE" layoutX="312.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IVI Score">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="22.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="296.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Composite">
-                                 <font>
-                                    <Font name="Planetside2 DemiBold" size="22.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="FXBR" layoutX="6.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="83.7998046875">
+                              <Text fx:id="FXBR" layoutX="52.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="83.7998046875">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="FXRKD" layoutX="92.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="129.9140625">
+                              <Text fx:id="FXRKD" layoutX="153.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="129.9140625">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="FXTKD" layoutX="213.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="115.0">
+                              <Text fx:id="FXTKD" layoutX="293.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="115.0">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="FXAcc" layoutX="308.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="123.240234375">
+                              <Text fx:id="FXAcc" layoutX="28.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="123.240234375">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="FXHSR" layoutX="45.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="114.228515625">
+                              <Text fx:id="FXHSR" layoutX="161.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="114.228515625">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="FXIVI" layoutX="145.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="137.3203125">
-                                 <font>
-                                    <Font name="Planetside2 DemiBold" size="25.0" />
-                                 </font>
-                              </Text>
-                              <Text layoutX="276.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SOON(TM)" textAlignment="CENTER" wrappingWidth="137.3203125">
+                              <Text fx:id="FXIVI" layoutX="285.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="N/A" textAlignment="CENTER" wrappingWidth="137.3203125">
                                  <font>
                                     <Font name="Planetside2 DemiBold" size="25.0" />
                                  </font>
@@ -233,9 +223,8 @@
                         <Text layoutX="307.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Acc" />
                         <Text layoutX="368.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HSR" />
                         <Text layoutX="444.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IVI" />
-                        <Text layoutX="499.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comp" />
-                        <Button layoutX="423.0" layoutY="12.0" mnemonicParsing="false" onAction="#exportCSV" text="Export as CSV (Soon)" />
-                        <Button fx:id="FXClear" layoutX="358.0" layoutY="12.0" mnemonicParsing="false" onAction="#clearHistory" text="Clear" />
+                        <Button layoutX="458.0" layoutY="12.0" mnemonicParsing="false" onAction="#exportCSV" text="Export as CSV" />
+                        <Button fx:id="FXClear" layoutX="408.0" layoutY="12.0" mnemonicParsing="false" onAction="#clearHistory" text="Clear" />
                      </children>
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

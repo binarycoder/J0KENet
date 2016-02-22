@@ -20,6 +20,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.concurrent.Task;
 
 public class GitGud {
+  static String APIKEY = "example"; //register an api key to make this work. Change this in FXMLController as well.
+  
   public static ArrayList<Integer> loadBanList(String searchValue, String filename) {
     ArrayList<Integer> output = new ArrayList<Integer>();
     File fileLocation = new File(filename);
@@ -75,7 +77,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
   int enemyAllowVehicles = enemyVehiclesAllowed.get(0);
   int allowVehicles = vehiclesAllowed.get(0);
 
-  String playerId = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?name.first_lower=" + playerName);
+  String playerId = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/character/?name.first_lower=" + playerName);
   
   if (playerId.equals("{\"character_list\":[],\"returned\":0}")) {
     return null;
@@ -86,14 +88,14 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     detailedOut += "Player Id: " + playerId + "\n";
     final int battleRank = new JSONObject(playerBr).getJSONArray("character_list")
         .getJSONObject(0).getJSONObject("battle_rank").getInt("value");
-    String killFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
+    String killFeed = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/characters_event/?character_id="
                                             + playerId + "&type=KILL&c:limit=" + SAMPLESIZE);
     if (killFeed.equals("{\"characters_event_list\":[],\"returned\":0}")) {
       return null;
     }
-    final String deathFeed = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/characters_event/?character_id="
+    final String deathFeed = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/characters_event/?character_id="
                                            + playerId + "&type=KILL,DEATH&c:limit=" + SAMPLESIZE);
-    final String fakeKdString = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/character/?character_id="
+    final String fakeKdString = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/character/?character_id="
                                             + playerId + "&c:resolve=stat_history");
  
     JSONArray data = new JSONObject(killFeed).getJSONArray("characters_event_list");
@@ -149,7 +151,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     ArrayList<String> weaponNames = new ArrayList<String>();
     double accuracy = 0;
     for (int i = 0; i < iviWeapons.size(); i++) {
-      String weaponData = censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/"
+      String weaponData = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/"
           + "characters_weapon_stat?character_id="
           + playerId + "&item_id=" + iviWeapons.get(i)
           + "&c:resolve=item&c:limit=50&c:sort=value:-1");

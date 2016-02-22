@@ -34,6 +34,7 @@ import javafx.scene.text.Text;
 
 
 public class FXMLController {
+  static String APIKEY = "example"; //register an api key to make this work. Change this in GitGud as well.
   
   String playerName = "";
   int historySize = 0;
@@ -153,7 +154,7 @@ public class FXMLController {
           }
           updateProgress(7, 10);
           for (int i = weaponIds.size() - 1; i >= 0 ; i--) {
-            int weaponId = new JSONObject(GitGud.censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2/item?item_id=" + weaponIds.get(i))).getJSONArray("item_list").getJSONObject(0).getInt("image_id");
+            int weaponId = new JSONObject(GitGud.censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2/item?item_id=" + weaponIds.get(i))).getJSONArray("item_list").getJSONObject(0).getInt("image_id");
             Image weapon = new Image("https://census.daybreakgames.com/files/ps2/images/static/" + weaponId + ".png");
             imageNameArray[i].setText(weaponNames.get(i));
             imagePositionArray[i].setImage((Image) weapon);
@@ -205,7 +206,7 @@ public class FXMLController {
         int sampleSize = Integer.parseInt(SampleEnterField.getText());
         String outfitName;
         outfitName = NameEnterField.getText();
-        String checkOutfit = GitGud.censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/outfit/?alias=" + outfitName);
+        String checkOutfit = GitGud.censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/outfit/?alias=" + outfitName);
         if (checkOutfit.equals("{\"outfit_list\":[],\"returned\":0}")) {
           FXPlayerName.setText("Error: Check spelling");
           gitGudButton.setDisable(false);
@@ -214,7 +215,7 @@ public class FXMLController {
         }
         String outfitId = new JSONObject(GitGud.censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/outfit/?alias=" + outfitName))
             .getJSONArray("outfit_list").getJSONObject(0).getString("outfit_id");
-        String outfitData = GitGud.censusFetch("https://census.daybreakgames.com/s:jokeNet/get/ps2:v2/outfit/?outfit_id="
+        String outfitData = GitGud.censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/outfit/?outfit_id="
             + outfitId + "&c:resolve=member_character(name)");
         int numberMembers = new JSONObject(outfitData).getJSONArray("outfit_list").getJSONObject(0).getInt("member_count");
         
