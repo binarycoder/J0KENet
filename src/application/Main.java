@@ -1,6 +1,7 @@
 package application;
-	
+
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javafx.application.Application;
@@ -32,8 +33,10 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-  
+
   public static void main(String[] args) {
+    System.out.printf("Current working directory: %s\n", Paths.get(".").toAbsolutePath().normalize().toString());
+
     launch(args);
   }
 }
