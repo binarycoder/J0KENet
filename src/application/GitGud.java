@@ -4,14 +4,11 @@ package application;
 //GitGud Stat Calculator v1.4
 //By: Alek "binarycoder" Bollig - 2/1/2015
 //Retrieves data from the Planetside 2 API, and calculates
-//               various data. 
+//               various data.
 ///////////////////////////////////////////////////////////
 
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,8 +18,13 @@ import javafx.concurrent.Task;
 
 public class GitGud {
   static String APIKEY = "example"; //register an api key to make this work. Change this in FXMLController as well.
-  
-  public static ArrayList<Integer> loadBanList(String searchValue, String filename) {
+
+
+  public static List<Integer> loadBanList(String searchValue, String filename) {
+    return loadBanList(searchValue, filename, null);
+  }
+
+  public static List<Integer> loadBanList(String searchValue, String filename, List<Integer> defaultValue) {
     ArrayList<Integer> output = new ArrayList<Integer>();
     File fileLocation = new File(filename);
     try {
@@ -38,12 +40,12 @@ public class GitGud {
         }
         endLine = true;
       }
-      
+
       file.close();
       return output;
     } catch (FileNotFoundException e) {
-      System.out.println("null");
-      return null;
+      System.out.printf("File not found: %s\n", fileLocation.getAbsolutePath());
+      return defaultValue;
     }
   }
   public static String censusFetch(String link) throws IOException {
@@ -55,8 +57,8 @@ public class GitGud {
     in.close();
     return output;
   }
-  
-  public static boolean antiCheese(int id, ArrayList<Integer> list) {
+
+  public static boolean antiCheese(int id, List<Integer> list) {
     for (int i = 0; i < list.size(); i++) {
       if (id == list.get(i)) {
         return false;
@@ -64,10 +66,11 @@ public class GitGud {
     }
     return true;
   }
-  
-public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> killBanList,
-    ArrayList<Integer> enemyKillBanList, ArrayList<Integer> vehiclesAllowed,
-    ArrayList<Integer> enemyVehiclesAllowed, int sampleSize) throws IOException {
+
+public static PlayerInfo getPlayerStats(String playerName, List<Integer> killBanList,
+    List<Integer> enemyKillBanList, List<Integer> vehiclesAllowed,
+    List<Integer> enemyVehiclesAllowed, int sampleSize) throws IOException {
+
   int SAMPLESIZE = sampleSize;
   String nameUpper = playerName;
   String detailedOut = "";
@@ -77,8 +80,9 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
   int enemyAllowVehicles = enemyVehiclesAllowed.get(0);
   int allowVehicles = vehiclesAllowed.get(0);
 
+  System.out.println("Fetching PID via API...");
   String playerId = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/character/?name.first_lower=" + playerName);
-  
+
   if (playerId.equals("{\"character_list\":[],\"returned\":0}")) {
     return null;
   } else {
@@ -88,22 +92,29 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     detailedOut += "Player Id: " + playerId + "\n";
     final int battleRank = new JSONObject(playerBr).getJSONArray("character_list")
         .getJSONObject(0).getJSONObject("battle_rank").getInt("value");
+
+    System.out.println("Fetching kill feed...");
     String killFeed = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/characters_event/?character_id="
                                             + playerId + "&type=KILL&c:limit=" + SAMPLESIZE);
     if (killFeed.equals("{\"characters_event_list\":[],\"returned\":0}")) {
+      System.out.println("Received empty kill feed");
       return null;
     }
+
+    System.out.println("Fetching death feed...");
     final String deathFeed = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/characters_event/?character_id="
                                            + playerId + "&type=KILL,DEATH&c:limit=" + SAMPLESIZE);
+
+    System.out.println("Fetching fake KD (??) feed...");
     final String fakeKdString = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/character/?character_id="
                                             + playerId + "&c:resolve=stat_history");
- 
+
     JSONArray data = new JSONObject(killFeed).getJSONArray("characters_event_list");
     int killCount = 0;
     int headshotCount = 0;
-    ArrayList<Integer> iviWeapons = new ArrayList<Integer>();
-    ArrayList<Integer> iviWeaponsCount = new ArrayList<Integer>();
-  
+    List<Integer> iviWeapons = new ArrayList<Integer>();
+    List<Integer> iviWeaponsCount = new ArrayList<Integer>();
+
     for (int i = 0; i < data.length(); i++) {
       int vehicleValue = data.getJSONObject(i).getInt("attacker_vehicle_id");
       if  (vehicleValue == 0 || allowVehicles == 1) { //remove vehicle kills
@@ -124,7 +135,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
         }
       }
     }
-      //Sort array 
+      //Sort array
     for (int i = 1; i < iviWeaponsCount.size(); i++) {
       int temp = iviWeaponsCount.get(i);
       int tempId = iviWeapons.get(i);
@@ -147,10 +158,11 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     } else {
       return null;
     }
-    
-    ArrayList<String> weaponNames = new ArrayList<String>();
+
+    List<String> weaponNames = new ArrayList<String>();
     double accuracy = 0;
     for (int i = 0; i < iviWeapons.size(); i++) {
+      System.out.println("Fetching weapon data...");
       String weaponData = censusFetch("https://census.daybreakgames.com/s:" + APIKEY + "/get/ps2:v2/"
           + "characters_weapon_stat?character_id="
           + playerId + "&item_id=" + iviWeapons.get(i)
@@ -170,7 +182,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
       accuracy += hit / fire;
     }
     accuracy /= iviWeapons.size();
-    
+
     JSONArray deathData = new JSONObject(deathFeed).getJSONArray("characters_event_list");
     int killCountKd = 0;
     int deathCountKd = 0;
@@ -178,13 +190,13 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
       String event = deathData.getJSONObject(i).getString("table_type");
       if (event.equals("deaths")) {
         int vehicleValue = deathData.getJSONObject(i).getInt("attacker_vehicle_id");
-        if  (vehicleValue == 0 || enemyAllowVehicles == 1) { //remove vehicle kills 
+        if  (vehicleValue == 0 || enemyAllowVehicles == 1) { //remove vehicle kills
           int weaponValue = deathData.getJSONObject(i).getInt("attacker_weapon_id");
           if (antiCheese(weaponValue,enemyKillBanList)) {
             deathCountKd++;
           }
         }
-        
+
       } else if (event.equals("kills")) {
         int vehicleValue = deathData.getJSONObject(i).getInt("attacker_vehicle_id");
         if  (vehicleValue == 0 || allowVehicles == 1) { //remove vehicle kills
@@ -203,7 +215,7 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     int kdIncrement = 0;
     int fakeK = 0;
     int fakeD = 1;
-    int week = 1; 
+    int week = 1;
     while (kdIncrement < SAMPLESIZE && week <= 9) {
       fakeD += reviveKdArray.getJSONObject(2).getJSONObject("week").getInt("w0" + week);
       fakeK += reviveKdArray.getJSONObject(5).getJSONObject("week").getInt("w0" + week);
@@ -222,11 +234,12 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     detailedOut += "Headshot Kills: " + killCountKd + "\n";
     detailedOut += "Shots Fired: " + shotsFired + "\n";
     detailedOut += "Shots Hit: " + shotsHit + "\n";
+
     return new PlayerInfo(nameUpper, battleRank, (double) fakeK / (double) fakeD, (double) killCountKd / (double) deathCountKd, accuracy, (double) headshotCount / (double) killCount, accuracy * (double) ((double) headshotCount
         / (double) killCount) * 10000, iviWeapons, weaponNames, detailedOut);
   }
 }
-  
+
   public static void main(String[] args) throws IOException {
     System.out.println("--GitGud v1.4--");
     System.out.println("_______________");
@@ -235,12 +248,14 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
     String playerName;
     String killFilter = "killfilter";
     String deathFilter = "deathfilter";
-    
-    ArrayList<Integer> killBanList = GitGud.loadBanList("KILLFILTER", "files\\default.txt");
-    ArrayList<Integer> enemyKillBanList = GitGud.loadBanList("ENEMYKILLFILTER", "files\\default.txt");
-    ArrayList<Integer> allowVehicles = GitGud.loadBanList("FRIEDLYVEHICLESALLOWED", "files\\default.txt");
-    ArrayList<Integer> enemyAllowVehicles = GitGud.loadBanList("ENEMYVEHICLESALLOWED", "files\\default.txt");
-          
+
+    String defaultFile = String.format("files%sdefault.txt", File.separatorChar);
+
+    List<Integer> killBanList = GitGud.loadBanList("KILLFILTER", defaultFile);
+    List<Integer> enemyKillBanList = GitGud.loadBanList("ENEMYKILLFILTER", defaultFile);
+    List<Integer> allowVehicles = GitGud.loadBanList("FRIEDLYVEHICLESALLOWED", defaultFile);
+    List<Integer> enemyAllowVehicles = GitGud.loadBanList("ENEMYVEHICLESALLOWED", defaultFile);
+
     System.out.print("Enter player name to retrieve statistics(or \"exit\" to quit): ");
     playerName = kb.next().toLowerCase();
     while (!playerName.equals("exit")) {
@@ -256,8 +271,8 @@ public static PlayerInfo getPlayerStats(String playerName, ArrayList<Integer> ki
           return;
         } else {
           data = getPlayerStats(playerName, killBanList, enemyKillBanList, allowVehicles, enemyAllowVehicles, 1000);
-          
-          
+
+
         }
       }
       System.out.println("IVI Calculated from the following weapon(s): " + data.getWeaponString().toString());
