@@ -1,6 +1,6 @@
 package application;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerInfo {
   static String playerName;
@@ -10,10 +10,10 @@ public class PlayerInfo {
   static double Acc;
   static double HSR;
   static double IVI;
-  static ArrayList<Integer> weapons;
-  static ArrayList<String> weaponString;
+  static List<Integer> weapons;
+  static List<String> weaponString;
   static String detailedOutput;
-  public PlayerInfo (String playerNameIn, int BRIn, double RKDIn, double TKDIn, double AccIn, double HSRIn, double IVIIn, ArrayList<Integer> weaponsIn, ArrayList<String> weaponStringIn, String detailedOutputIn) {
+  public PlayerInfo (String playerNameIn, int BRIn, double RKDIn, double TKDIn, double AccIn, double HSRIn, double IVIIn, List<Integer> weaponsIn, List<String> weaponStringIn, String detailedOutputIn) {
     playerName = playerNameIn;
     BR = BRIn;
     RKD = RKDIn;
@@ -24,7 +24,7 @@ public class PlayerInfo {
     weapons = weaponsIn;
     weaponString = weaponStringIn;
     detailedOutput = detailedOutputIn;
-    
+
   }
   public String getPlayerName() {
     return playerName;
@@ -47,14 +47,13 @@ public class PlayerInfo {
   public double getIVI() {
     return IVI;
   }
-  public ArrayList<Integer> getWeapons() {
+  public List<Integer> getWeapons() {
     return weapons;
   }
-  public ArrayList<String> getWeaponString() {
+  public List<String> getWeaponString() {
     return weaponString;
   }
   public String getDetailedOutput() {
     return detailedOutput;
   }
 }
-

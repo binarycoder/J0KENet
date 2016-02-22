@@ -22,3 +22,5 @@ If Java is not installed, it can be installed here: https://www.java.com/en/down
 Filter Lists:
 Note: please use an advanced text editor such as notepad++ to edit the list files!
 Included in the "files" directory (please keep them in the folder) are the weapon filter files. The weapon ids listed in these files are removed when statistics are calculated. They are simple text files with a single numeric id on each line. The default settings can be defined by editing the "default.txt" file. You can also save configurations that can be loaded in the menu when running.
+
+Thanks to Ceiu for helping out as well!
