@@ -10,7 +10,7 @@ Algorithm Explanation:
  * BR: Just pulled from the character stats. 
  * Revive KD: Pulled from weekly historical stats until there are more than 1000 points of data.
  * True KD: Pulls the past 1000 kills/death events, then records all kills except the following: kills in a vehicle, suicides (self kills. weird.), and kills with knives, consumable explosives, pistols, shotguns, and MAX weapons. It then records all deaths, and computes a ratio of kills / deaths.
- * Accuracy: Calculates most recently used weapons from kill-board, keeping the top 1-3 with more than 100 kills. Then pulls and averages total shots registered vs shots fired.
+ * Accuracy: Takes per-class historical accuracy for the most recent classes, selecting from Daily/Weekly/Monthly/Lifetime based on proximity to entered sample size. Support classes, Medic and Engineer, are also subject to an additional calculation, which weights the shots fired against the ratio for shots fired from support tools vs all weapons. Looks like: shots hit / (shots fired * (1 - (tool shots / total shots))
  * HSR: Pulls the last 1000 kills only, and applies the same restrictions as above. Then records the number of kills from that set that were accomplished with a head-shot, and then computes the ratio of head-shot kills / total kills.
  * IVI: HSR * Accuracy.
 
