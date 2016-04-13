@@ -226,8 +226,6 @@ public class FXMLController {
 
         updateProgress(0, numberMembers);
         JSONArray playerData = new JSONObject(outfitData).getJSONArray("outfit_list").getJSONObject(0).getJSONArray("members");
-        int[] playerIds = new int[numberMembers];
-
         for (int i = 0; i < numberMembers; i++) {
           if (playerData.getJSONObject(i).has("name") == true) {
             String id = playerData.getJSONObject(i).getJSONObject("name").getString("first");

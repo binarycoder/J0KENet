@@ -13,7 +13,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="668.0" prefWidth="274.0">
                <children>
-                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.1--" />
+                  <Text layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--J0KE.gg V2.2 -" />
                   <TextField fx:id="NameEnterField" layoutX="19.0" layoutY="61.0" onAction="#EnterPlayerName" onKeyPressed="#CalculateButtonEnter" promptText="Enter Name" />
                   <Text layoutX="19.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Player Name or Outfit">
                      <font>
@@ -225,6 +225,11 @@
                         <Text layoutX="444.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IVI" />
                         <Button layoutX="458.0" layoutY="12.0" mnemonicParsing="false" onAction="#exportCSV" text="Export as CSV" />
                         <Button fx:id="FXClear" layoutX="408.0" layoutY="12.0" mnemonicParsing="false" onAction="#clearHistory" text="Clear" />
+                        <Text layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot; * &quot; denotes entries that use Historically Weighted Accuracy">
+                           <font>
+                              <Font name="System Italic" size="9.0" />
+                           </font>
+                        </Text>
                      </children>
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
